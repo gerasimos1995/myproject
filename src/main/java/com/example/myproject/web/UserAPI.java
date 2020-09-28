@@ -2,6 +2,9 @@ package com.example.myproject.web;
 
 import com.example.myproject.dao.UserDAO;
 import com.example.myproject.model.User;
+
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/users")
 public class UserAPI {
+
+    Logger logger = LoggerFactory.getLogger(UserAPI.class);
 
     @Autowired
     private UserDAO userDao;
@@ -20,16 +26,19 @@ public class UserAPI {
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     public User addUser(@RequestBody User user){
+        logger.info("Trying to add a new user");
         return userDao.save(user);
     }
 
     @GetMapping("/")
     public List<User> getUsers(){
+        logger.info("Requested all users");
         return (List<User>) userDao.findAll();
     }
 
     @GetMapping("/{id}")
     public Optional<User> getUser(@PathVariable("id") Integer userId){
+        logger.info("Requested specific user");
         return userDao.findById(userId);
     }
 
