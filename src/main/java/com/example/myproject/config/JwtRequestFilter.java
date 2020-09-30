@@ -35,7 +35,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        logger.info("Authorization header received in doInternal is: " + request.getHeader("Authorization"));
+        //logger.info("Authorization header received in doInternal is: " + request.getHeader("Authorization"));
         final String requestTokenHeader = request.getHeader("Authorization");
 
         String username = null;

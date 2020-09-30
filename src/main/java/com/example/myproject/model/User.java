@@ -36,6 +36,13 @@ public class User {
         this.address = address;
     }
 
+    public User(String username, String password, @Email String email){
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.address = null;
+    }
+
     public int getUserId() {
         return userId;
     }

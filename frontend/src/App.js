@@ -5,13 +5,14 @@ import SignupForm from './components/LoginForm/SignupForm'
 import LoginForm from './components/LoginForm/LoginForm';
 import HorizNavBar from './components/HorizNavBar';
 
+//export const path = "http://localhost:8080/api"
 export const userContext = React.createContext()
 
 const initialState = { 
   isUserLoggedIn : false,
   userInfo :{
     username : '',
-    password : ''
+    email : ''
   }
 }
 
@@ -19,15 +20,15 @@ const reducer = (state, action) => {
   switch(action.type){
     case 'signup':
       return {
-        isUserLoggedIn : false,
-        userInfo : {
-          username : action.payload.username,
-          password : action.payload.password
-        }
+        ...state,
+        isUserLoggedIn : false        
       }
     case 'login-success':
       return {
-        ...state,
+        userInfo : {
+          username : action.payload.username,
+          email : action.payload.email
+        },
         isUserLoggedIn : true
       }
     case 'login-failure':
