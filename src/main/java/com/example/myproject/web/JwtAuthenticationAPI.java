@@ -44,14 +44,14 @@ public class JwtAuthenticationAPI {
 
     @PostMapping(value = "/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-        //logger.info("Inside CreateAuthToken received request: " + authenticationRequest);
+        logger.info("Inside CreateAuthToken received request: " + authenticationRequest);
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
-        //logger.info("Inside CreateAuthToken the generated token is: " + token);
+        logger.info("Inside CreateAuthToken the generated token is: " + token);
         return ResponseEntity.ok(new JwtResponse(token));
     }
 

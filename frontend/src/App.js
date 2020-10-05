@@ -3,9 +3,8 @@ import React, { useReducer } from 'react';
 import { BrowserRouter as Router, Route} from 'react-router-dom'
 import SignupForm from './components/LoginForm/SignupForm'
 import LoginForm from './components/LoginForm/LoginForm';
-import HorizNavBar from './components/HorizNavBar';
+import Homepage from './components/Homepage';
 
-//export const path = "http://localhost:8080/api"
 export const userContext = React.createContext()
 
 const initialState = { 
@@ -52,11 +51,10 @@ function App() {
         
         <Router>
           <userContext.Provider value={{userState: user, userDispatch: dispatch}}>
-            <Route path='/' exact component={HorizNavBar}/>
-          </userContext.Provider>
-          {/* <Route path='/' exact component={Homepage}/> */}
-          <Route path="/login" component={LoginForm}/>
-          <Route path='/signup' component={SignupForm}/>
+            <Route path='/' exact component={Homepage}/>
+            <Route path="/login" component={LoginForm}/>
+            <Route path='/signup' component={SignupForm}/>
+          </userContext.Provider>          
         </Router>
 
         

@@ -1,39 +1,62 @@
-import { Col, Form,  FormGroup, Input, Label, Button } from 'reactstrap';
-// import '../../index.css'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import {userContext} from '../../App'
+
+import { Col, Form,  FormGroup, Input, Label, Button } from 'reactstrap';
+
+import axios from '../../config/axiosConfig.js'
+import { API_BASE_URL } from '../../constants/constants.js'
 
 function LoginForm() {
         const user = useContext(userContext)
 
-        const [userName, setuserName] = useState('')
-        const [passWord, setpassWord] = useState('')
+        const history = useHistory()
 
-        const checkValidation = () => {
-            // console.log("from check valid: ", JSON.stringify(user.userState.user.username))
-            // console.log("state variables are: " ,userName, passWord)
-            if (JSON.stringify(userName) == JSON.stringify(user.userState.userInfo.username)){
-                if (JSON.stringify(passWord) == JSON.stringify(user.userState.userInfo.password)){
-                    user.userDispatch({
-                        type: 'login-success'
-                    })
-                }else{
-                    console.log("Unsuccessfull")
-                }
-            }else{
-                console.log("Unsuccessfull")
-            }
+        const [username, setUsername] = useState('')
+        const [password, setPassword] = useState('')
+
+        const loginUser = async () => {
+                console.log("Trying to login user: " + username + " with: " + password)
+                await axios({
+                    method: 'POST',
+                    url: `${API_BASE_URL}/auth/authenticate`,
+                    data: {
+                        username: username,
+                        password: password
+                    }
+                }).then(res => {
+                    console.log(JSON.stringify(res.status))
+                    console.log(JSON.stringify(res.data.token))
+                    let token = res.data.token
+                    localStorage.setItem('userToken', 'Bearer ' + token)
+                    if (res.status == "200"){
+                        user.userDispatch({
+                            type: 'login-success',
+                            payload: {
+                                username: username,
+                                email: "email"
+                            }
+                        })
+                        console.log("Login Success")
+                        history.push('/')
+                    }
+                }).catch(err => {
+                    console.log(JSON.stringify(err))
+                    user.userDispatch({type: 'login-failure'})
+                    history.push('')
+                })
         }
 
         return (
         <div>
             <div className="col-md-4 offset-md-4">
                 <Form>
+                    <h1>Login</h1>
                     <FormGroup row>
                         <Label for="user_username" md={3}>Username</Label>
                         <Col md={9}>
                             <Input type="text" placeholder="Type your username" onChange={(e) => {
-                                setuserName(e.target.value)
+                                setUsername(e.target.value)
                             }}/>
                         </Col>
                     </FormGroup>
@@ -41,14 +64,14 @@ function LoginForm() {
                         <Label for="user_password" md={3}>Password</Label>
                         <Col md={9}>
                             <Input type="password" placeholder="Type your password" onChange={(e) => {
-                                setpassWord(e.target.value)
+                                setPassword(e.target.value)
                             }}/>
                         </Col>
                     </FormGroup>
                     <FormGroup>
                         <Button type="submit" onClick={(e) => {
-                            e.preventDefault()
-                            checkValidation()
+                            e.preventDefault();
+                            loginUser()
                         }}>Submit</Button>
                     </FormGroup>
                 </Form>
